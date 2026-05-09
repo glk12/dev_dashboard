@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  owner: MyString
+  repo_name: MyString
+  default_branch: MyString
+  active: false
+
+two:
+  name: MyString
+  owner: MyString
+  repo_name: MyString
+  default_branch: MyString
+  active: false

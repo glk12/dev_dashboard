@@ -1,0 +1,55 @@
+<h1>My PRs</h1>
+
+<nav style="margin-bottom: 24px;">
+  <%= link_to "Repositories", repositories_path %>
+</nav>
+
+<% if @kanban_columns.values.flatten.empty? %>
+  <p>No open pull requests found.</p>
+<% else %>
+  <div style="display: flex; gap: 16px; align-items: flex-start;">
+    # Iterates over each column and its associated pull requests
+    <% @kanban_columns.each do |column, pull_requests| %>
+      <section style="width: 320px; border: 1px solid #ccc; border-radius: 8px; padding: 12px;">
+        <h2>
+          <%= @kanban.column_title(column) %>
+          (<%= pull_requests.count %>)
+        </h2>
+        <% if pull_requests.any? %>
+          # Iterates over each pull request in the current column
+          <% pull_requests.each do |pull_request| %>
+            <article style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+              <p>
+                <strong>#<%= pull_request[:number] %></strong>
+              </p>
+
+              <p>
+                <%= link_to pull_request[:title], pull_request[:url], target: "_blank", rel: "noopener" %>
+              </p>
+
+              <p>
+                <small>
+                  <%= pull_request[:repository_name] %>
+                </small>
+              </p>
+
+              <p>
+                <code><%= pull_request[:head_ref] %></code>
+                →
+                <code><%= pull_request[:base_ref] %></code>
+              </p>
+
+              <% if pull_request[:draft] %>
+                <p>
+                  <strong>Draft</strong>
+                </p>
+              <% end %>
+            </article>
+          <% end %>
+        <% else %>
+          <p>No PRs.</p>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
+<% end %>
