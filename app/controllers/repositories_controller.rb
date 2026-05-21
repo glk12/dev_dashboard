@@ -1,5 +1,7 @@
 class RepositoriesController < ApplicationController
   before_action :set_repository, only: %i[ show edit update destroy ]
+  before_action :require_authentication
+  before_action :require_github_credential
 
   # GET /repositories or /repositories.json
   def index

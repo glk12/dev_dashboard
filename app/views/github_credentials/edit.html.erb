@@ -1,0 +1,128 @@
+<% content_for :title, "GitHub token" %>
+
+<section class="mx-auto max-w-6xl space-y-8">
+  <div class="page-header">
+    <div class="space-y-3">
+      <p class="eyebrow">GitHub Access</p>
+      <h1 class="page-title">Connect GitHub Token</h1>
+      <p class="page-copy">
+        Your account is connected as <span class="font-semibold text-white"><%= current_user.github_login %></span>. Add a fine-grained token so the dashboard can read your pull requests with your own repository permissions.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+    <section class="card space-y-6">
+      <div class="space-y-3">
+        <h2 class="font-display text-2xl font-semibold tracking-tight text-white">What this token needs</h2>
+        <p class="help-text">
+          Create a fine-grained personal access token in GitHub with access only to the repositories you want this dashboard to inspect.
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+          <p class="text-sm font-semibold text-white">Repository access</p>
+          <p class="mt-2 text-sm leading-6 text-slate-300">Selected repositories only.</p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+          <p class="text-sm font-semibold text-white">Minimum permissions</p>
+          <ul class="mt-2 space-y-2 text-sm leading-6 text-slate-300">
+            <li>Metadata: read-only</li>
+            <li>Pull requests: read-only</li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-brand-400/20 bg-brand-500/10 p-4">
+          <p class="text-sm font-semibold text-brand-200">Important</p>
+          <p class="mt-2 text-sm leading-6 text-slate-300">
+            Fine-grained tokens can expire and are limited to the repositories you explicitly select in GitHub.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <%= link_to "Open GitHub token settings", "https://github.com/settings/personal-access-tokens/new", target: "_blank", rel: "noopener", class: "btn-secondary w-full sm:w-auto" %>
+      </div>
+    </section>
+
+    <section class="card space-y-6">
+      <div class="space-y-4">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="font-display text-2xl font-semibold tracking-tight text-white">Token setup</h2>
+            <p class="help-text">Paste a fine-grained token from the same GitHub account you used to sign in.</p>
+          </div>
+
+          <% if @github_credential.persisted? %>
+            <span class="badge-success">Connected</span>
+          <% else %>
+            <span class="badge-neutral">Not connected</span>
+          <% end %>
+        </div>
+
+        <% if @github_credential.persisted? %>
+          <div class="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
+            <p class="text-sm font-semibold text-emerald-200">Current token</p>
+            <p class="mt-2 text-sm text-slate-200">
+              <span class="font-mono">••••<%= @github_credential.token_last_four %></span>
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+      <%= form_with model: @github_credential,
+                    url: github_token_path,
+                    method: :patch,
+                    class: "space-y-6" do |form| %>
+        <% if @github_credential.errors.any? %>
+          <div class="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4">
+            <p class="text-sm font-semibold text-rose-200">Token could not be saved</p>
+            <ul class="mt-3 space-y-2">
+              <% @github_credential.errors.full_messages.each do |message| %>
+                <li class="error-text"><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="space-y-2">
+          <%= form.label :fine_grained_token, "Fine-grained token", class: "input-label" %>
+          <%= form.password_field :fine_grained_token,
+                                  required: true,
+                                  autocomplete: "off",
+                                  placeholder: "github_pat_...",
+                                  class: "input-field font-mono" %>
+          <p class="help-text">
+            The token is stored securely and will only be shown back as the last 4 characters.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <%= form.submit "Save token", class: "btn-primary" %>
+          <%= link_to "Back to dashboard", root_path, class: "btn-secondary" %>
+        </div>
+      <% end %>
+
+      <% if @github_credential.persisted? %>
+        <div class="border-t border-slate-800 pt-6">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm font-semibold text-white">Disconnect token</p>
+              <p class="mt-1 text-sm text-slate-400">
+                Remove the saved token from this account. The dashboard will stop loading GitHub data until a new token is connected.
+              </p>
+            </div>
+
+            <%= button_to "Disconnect token",
+                          github_token_path,
+                          method: :delete,
+                          data: { turbo: false },
+                          class: "btn-danger" %>
+          </div>
+        </div>
+      <% end %>
+    </section>
+  </div>
+</section>

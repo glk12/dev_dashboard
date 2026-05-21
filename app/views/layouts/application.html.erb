@@ -32,10 +32,19 @@
               <% end %>
             </div>
 
-            <nav class="flex flex-wrap items-center gap-2">
-              <%= link_to "My PRs", root_path, class: nav_link_class(root_path) %>
-              <%= link_to "Repositories", repositories_path, class: nav_link_class(repositories_path) %>
-            </nav>
+            <div class="flex flex-wrap items-center gap-2">
+              <nav class="flex flex-wrap items-center gap-2">
+                <%= link_to "My PRs", root_path, class: nav_link_class(root_path) %>
+                <%= link_to "Repositories", repositories_path, class: nav_link_class(repositories_path) %>
+                <% if authenticated? %>
+                  <%= link_to "GitHub Token", edit_github_token_path, class: nav_link_class(edit_github_token_path) %>
+                <% end %>
+              </nav>
+
+              <% if authenticated? %>
+                <%= button_to "Logout", logout_path, method: :delete, data: { turbo: false }, class: "btn-ghost" %>
+              <% end %>
+            </div>
           </div>
         </div>
       </header>

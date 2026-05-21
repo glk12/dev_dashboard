@@ -1,9 +1,10 @@
 module Github
   class PullRequestsFetcher
-    def initialize(repositories:, username: nil, access_token: nil)
+    def initialize(repositories:, user:)
       @repositories = repositories
-      @username = username || default_username
-      @client = Github::Client.new(access_token: access_token)
+      @user = user
+      @username = user.github_login
+      @client = Github::Client.new(access_token: user.github_credential.fine_grained_token)
     end
 
     def call
@@ -51,10 +52,6 @@ module Github
         updated_at: pull_request.updated_at,
         review_state: latest_review_state(repository.full_name, pull_request.number)
       }
-    end
-
-    def default_username
-      Rails.application.credentials.dig(:github, :username)
     end
   end
 end
