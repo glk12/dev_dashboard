@@ -1,16 +1,44 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Repositories" %>
 
-<h1>Repositories</h1>
+<section class="space-y-8">
+  <div class="app-panel p-6 sm:p-8">
+    <div class="page-header">
+      <div class="space-y-3">
+        <p class="eyebrow">Repository Settings</p>
+        <h1 class="page-title">Repositories</h1>
+        <p class="page-copy">
+          Configure which GitHub repositories feed the dashboard and control their sync status.
+        </p>
+      </div>
 
-<div id="repositories">
-  <% @repositories.each do |repository| %>
-    <%= render repository %>
-    <p>
-      <%= link_to "Show this repository", repository %>
-    </p>
+      <div class="flex flex-wrap gap-3">
+        <%= link_to "New repository", new_repository_path, class: "btn-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <% if @repositories.any? %>
+    <section id="repositories" class="grid gap-6 lg:grid-cols-2">
+      <% @repositories.each do |repository| %>
+        <article class="card space-y-6">
+          <%= render repository %>
+
+          <div class="flex flex-wrap gap-3">
+            <%= link_to "Open", repository, class: "btn-secondary" %>
+            <%= link_to "Edit", edit_repository_path(repository), class: "btn-ghost" %>
+          </div>
+        </article>
+      <% end %>
+    </section>
+  <% else %>
+    <section class="card text-center">
+      <div class="mx-auto max-w-lg space-y-4">
+        <h2 class="font-display text-2xl font-semibold tracking-tight text-white">No repositories configured</h2>
+        <p class="page-copy mx-auto">
+          Create your first repository source to start tracking pull requests from GitHub.
+        </p>
+        <%= link_to "Create repository", new_repository_path, class: "btn-primary" %>
+      </div>
+    </section>
   <% end %>
-</div>
-
-<%= link_to "New repository", new_repository_path %>
+</section>

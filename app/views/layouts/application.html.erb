@@ -14,16 +14,41 @@
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="app-shell min-h-screen">
+    <div class="min-h-screen">
+      <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur">
+        <div class="app-container">
+          <div class="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <%= link_to root_path, class: "inline-flex items-center gap-3" do %>
+                <div>
+                  <p class="font-display text-lg font-semibold tracking-tight text-white">Dev Dashboard</p>
+                </div>
+              <% end %>
+            </div>
+
+            <nav class="flex flex-wrap items-center gap-2">
+              <%= link_to "My PRs", root_path, class: nav_link_class(root_path) %>
+              <%= link_to "Repositories", repositories_path, class: nav_link_class(repositories_path) %>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-container py-8 sm:py-10">
+        <% flash.each do |type, message| %>
+          <div class="<%= "#{flash_class(type)} mb-6 rounded-2xl px-4 py-3 text-sm font-medium shadow-sm" %>">
+            <%= message %>
+          </div>
+        <% end %>
+
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

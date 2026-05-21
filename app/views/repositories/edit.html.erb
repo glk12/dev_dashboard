@@ -1,12 +1,21 @@
 <% content_for :title, "Editing repository" %>
 
-<h1>Editing repository</h1>
+<section class="mx-auto max-w-3xl space-y-8">
+  <div class="page-header">
+    <div class="space-y-3">
+      <p class="eyebrow">Update Source</p>
+      <h1 class="page-title">Edit repository</h1>
+      <p class="page-copy">
+        Adjust the connection settings or toggle whether this repository is included in PR tracking.
+      </p>
+    </div>
 
-<%= render "form", repository: @repository %>
+    <div class="flex flex-wrap gap-3">
+      <%= link_to "View repository", @repository, class: "btn-secondary" %>
+    </div>
+  </div>
 
-<br>
-
-<div>
-  <%= link_to "Show this repository", @repository %> |
-  <%= link_to "Back to repositories", repositories_path %>
-</div>
+  <section class="card">
+    <%= render "form", repository: @repository %>
+  </section>
+</section>

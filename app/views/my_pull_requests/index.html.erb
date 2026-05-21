@@ -1,53 +1,75 @@
-<h1>My PRs</h1>
+<% content_for :title, "My PRs" %>
 
-<nav style="margin-bottom: 24px;">
-  <%= link_to "Repositories", repositories_path %>
-</nav>
-
-<% if @kanban_columns.values.flatten.empty? %>
-  <p>No open pull requests found.</p>
-<% else %>
-  <div style="display: flex; gap: 16px; align-items: flex-start;">
-    <% @kanban_columns.each do |column, pull_requests| %>
-      <section style="width: 320px; border: 1px solid #ccc; border-radius: 8px; padding: 12px;">
-        <h2>
-          <%= @kanban.column_title(column) %>
-          (<%= pull_requests.count %>)
-        </h2>
-        <% if pull_requests.any? %>
-          <% pull_requests.each do |pull_request| %>
-            <article style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-              <p>
-                <strong>#<%= pull_request[:number] %></strong>
-              </p>
-
-              <p>
-                <%= link_to pull_request[:title], pull_request[:url], target: "_blank", rel: "noopener" %>
-              </p>
-
-              <p>
-                <small>
-                  <%= pull_request[:repository_name] %>
-                </small>
-              </p>
-
-              <p>
-                <code><%= pull_request[:head_ref] %></code>
-                →
-                <code><%= pull_request[:base_ref] %></code>
-              </p>
-
-              <% if pull_request[:draft] %>
-                <p>
-                  <strong>Draft</strong>
-                </p>
-              <% end %>
-            </article>
-          <% end %>
-        <% else %>
-          <p>No PRs.</p>
-        <% end %>
-      </section>
-    <% end %>
+<section class="space-y-8">
+  <div class="page-header">
+    <div class="space-y-2">
+      <h1 class="page-title">My PR's</h1>
+    </div>
   </div>
-<% end %>
+
+  <% if @kanban_columns.values.flatten.empty? %>
+    <section class="card text-center">
+      <div class="mx-auto flex max-w-lg flex-col items-center gap-4">
+        <div class="flex h-16 w-16 items-center justify-center rounded-3xl bg-brand-500/15 text-brand-300">
+          <span class="font-display text-xl font-bold">PR</span>
+        </div>
+        <div class="space-y-2">
+          <h2 class="font-display text-2xl font-semibold tracking-tight text-white">No open pull requests</h2>
+          <p class="page-copy">
+            Add or activate repositories to start syncing pull requests into this dashboard.
+          </p>
+        </div>
+        <%= link_to "Add repository", new_repository_path, class: "btn-primary" %>
+      </div>
+    </section>
+  <% else %>
+    <section class="space-y-4">
+      <div class="overflow-x-auto pb-2">
+        <div class="flex min-w-max justify-center gap-5">
+          <% @kanban_columns.each do |column, pull_requests| %>
+            <section class="<%= "w-80 shrink-0 rounded-3xl border p-4 shadow-[0_20px_40px_rgba(0,0,0,0.24)] #{pull_request_column_classes(column)}" %>">
+              <div class="mb-4 flex items-center justify-between">
+                <div>
+                  <h3 class="font-display text-lg font-semibold text-white"><%= @kanban.column_title(column) %></h3>
+                  <p class="text-sm text-slate-300"><%= pluralize(pull_requests.count, "open PR") %></p>
+                </div>
+                <span class="badge-neutral"><%= pull_requests.count %></span>
+              </div>
+
+              <div class="space-y-4">
+                <% if pull_requests.any? %>
+                  <% pull_requests.each do |pull_request| %>
+                    <article class="rounded-2xl border border-slate-700/80 bg-slate-950/95 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.28)]">
+                      <div class="mb-3 flex items-start justify-between gap-3">
+                        <% if pull_request[:draft] %>
+                          <span class="badge rounded-full bg-slate-700 px-2.5 py-1 text-white">Draft</span>
+                        <% end %>
+                      </div>
+
+                      <div class="space-y-3">
+                        <div>
+                          <%= link_to pull_request[:title], pull_request[:url], target: "_blank", rel: "noopener", class: "font-semibold leading-6 text-white hover:text-brand-300" %>
+                          <p class="mt-1 text-sm text-slate-400"><%= pull_request[:repository_name] %></p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-300">
+                          <span class="rounded-full border border-slate-700 bg-slate-900 px-2.5 py-1 font-mono text-slate-200"><%= pull_request[:head_ref] %></span>
+                          <span>to</span>
+                          <span class="rounded-full border border-brand-400/30 bg-brand-500/15 px-2.5 py-1 font-mono text-brand-200"><%= pull_request[:base_ref] %></span>
+                        </div>
+                      </div>
+                    </article>
+                  <% end %>
+                <% else %>
+                  <div class="rounded-2xl border border-dashed border-slate-700 bg-slate-950/70 px-4 py-8 text-center">
+                    <p class="text-sm font-medium text-slate-400">No PRs in this stage.</p>
+                  </div>
+                <% end %>
+              </div>
+            </section>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+</section>
