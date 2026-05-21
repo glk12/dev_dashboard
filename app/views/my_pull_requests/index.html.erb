@@ -8,7 +8,6 @@
   <p>No open pull requests found.</p>
 <% else %>
   <div style="display: flex; gap: 16px; align-items: flex-start;">
-    # Iterates over each column and its associated pull requests
     <% @kanban_columns.each do |column, pull_requests| %>
       <section style="width: 320px; border: 1px solid #ccc; border-radius: 8px; padding: 12px;">
         <h2>
@@ -16,7 +15,6 @@
           (<%= pull_requests.count %>)
         </h2>
         <% if pull_requests.any? %>
-          # Iterates over each pull request in the current column
           <% pull_requests.each do |pull_request| %>
             <article style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
               <p>

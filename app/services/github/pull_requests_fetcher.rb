@@ -5,7 +5,7 @@ module Github
       @username = username || default_username
       @client = Github::Client.new(access_token: access_token)
     end
-      
+
     def call
       @repositories.flat_map do |repository|
         pull_requests_for(repository)
@@ -27,6 +27,14 @@ module Github
       []
     end
 
+    def latest_review_state(repository_full_name, pull_number)
+      reviews = @client.pull_request_reviews(repository_full_name, pull_number)
+      reviews
+        .select { |review| ["APPROVED", "CHANGES_REQUESTED"].include?(review.state) }
+        .max_by(&:submitted_at)
+        &.state
+    end
+
     def build_pull_request_data(repository, pull_request)
       {
         repository_name: repository.name,
@@ -40,7 +48,8 @@ module Github
         state: pull_request.state,
         url: pull_request.html_url,
         created_at: pull_request.created_at,
-        updated_at: pull_request.updated_at 
+        updated_at: pull_request.updated_at,
+        review_state: latest_review_state(repository.full_name, pull_request.number)
       }
     end
 
