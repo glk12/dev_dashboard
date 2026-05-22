@@ -1,0 +1,113 @@
+.kanban-board {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    min-width: max-content;
+}
+
+.kanban-column {
+    border-radius: 1.5rem;
+    border: 1px solid rgba(51, 65, 85, 0.8);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+    flex-shrink: 0;
+    padding: 1rem;
+    width: 20rem;
+}
+
+.kanban-column__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.kanban-column__title {
+    color: #fff;
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.kanban-column__meta {
+    color: #cbd5e1;
+    font-size: 0.875rem;
+}
+
+.pr-card {
+    background-color: rgba(2, 6, 24, 0.95);
+    border: 1px solid rgba(51, 65, 85, 0.8);
+    border-radius: 1rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    padding: 1rem;
+}
+
+.pr-card__status {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.pr-card__draft {
+    background-color: #334155;
+    color: #fff;
+}
+
+.pr-card__title {
+    color: #fff;
+    font-weight: 600;
+    line-height: 1.5rem;
+
+    &:hover {
+        color: #8fc5ff;
+    }
+}
+
+.pr-card__repo {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.pr-branch-list {
+    align-items: center;
+    color: #cbd5e1;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    font-weight: 500;
+    gap: 0.5rem;
+}
+
+.pr-branch {
+    border: 1px solid;
+    border-radius: 9999px;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    padding: 0.25rem 0.625rem;
+}
+
+.pr-branch--head {
+    background-color: #0f172b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+.pr-branch--base {
+    background-color: rgba(47, 128, 237, 0.15);
+    border-color: rgba(90, 165, 255, 0.3);
+    color: #bcdcff;
+}
+
+.kanban-empty {
+    background-color: rgba(2, 6, 24, 0.7);
+    border: 1px dashed #334155;
+    border-radius: 1rem;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.kanban-empty__copy {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    font-weight: 500;
+}

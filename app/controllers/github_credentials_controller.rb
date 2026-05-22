@@ -8,9 +8,26 @@ class GithubCredentialsController < ApplicationController
 
   def update
     token = github_credential_params[:fine_grained_token]
-
     @github_credential = current_user.github_credential ||
                          current_user.build_github_credential
+
+    validation = Github::TokenValidator.new(
+      token: token,
+      expected_login: current_user.github_login
+    ).call
+
+    unless validation.success?
+      @github_credential.assign_attributes(
+        fine_grained_token: token,
+        token_last_four: token.to_s.last(4),
+        last_validated_at: Time.current,
+        last_validation_error: validation.error_message,
+        active: false
+      )
+      @github_credential.errors.add(:fine_grained_token, validation.error_message)
+      flash.now[:alert] = validation.error_message
+      return render :edit, status: :unprocessable_entity
+    end
 
     @github_credential.assign_attributes(
       fine_grained_token: token,

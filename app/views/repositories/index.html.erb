@@ -7,37 +7,82 @@
         <p class="eyebrow">Repository Settings</p>
         <h1 class="page-title">Repositories</h1>
         <p class="page-copy">
-          Configure which GitHub repositories feed the dashboard and control their sync status.
+          These are the repositories visible to your current GitHub token. Activate the ones that should feed your dashboard.
         </p>
-      </div>
-
-      <div class="flex flex-wrap gap-3">
-        <%= link_to "New repository", new_repository_path, class: "btn-primary" %>
       </div>
     </div>
   </div>
 
-  <% if @repositories.any? %>
-    <section id="repositories" class="grid gap-6 lg:grid-cols-2">
-      <% @repositories.each do |repository| %>
-        <article class="card space-y-6">
-          <%= render repository %>
+  <% if @available_repositories.any? %>
+    <section id="repositories" class="repo-grid">
+      <% @available_repositories.each do |repository_data| %>
+        <article class="repo-card">
+          <div class="repo-card__header">
+            <div class="stack-sm">
+              <div class="repo-card__title-row">
+                <h2 class="repo-card__title"><%= repository_data[:name] %></h2>
+                <span class="badge-neutral">
+                  <% if repository_data[:private] %>
+                    Private
+                  <% else %>
+                    Public
+                  <% end %>
+                </span>
+              </div>
 
-          <div class="flex flex-wrap gap-3">
-            <%= link_to "Open", repository, class: "btn-secondary" %>
-            <%= link_to "Edit", edit_repository_path(repository), class: "btn-ghost" %>
+              <p class="repo-card__subtitle"><%= repository_data[:full_name] %></p>
+            </div>
+
+            <% if repository_data[:active] %>
+              <span class="badge-success">Active</span>
+            <% else %>
+              <span class="badge-neutral">Inactive</span>
+            <% end %>
+          </div>
+
+          <dl class="repo-metadata">
+            <div class="repo-metadata__item">
+              <dt class="repo-metadata__label">Owner</dt>
+              <dd class="repo-metadata__value"><%= repository_data[:owner] %></dd>
+            </div>
+
+            <div class="repo-metadata__item">
+              <dt class="repo-metadata__label">Repository slug</dt>
+              <dd class="repo-metadata__value"><%= repository_data[:repo_name] %></dd>
+            </div>
+
+            <div class="repo-metadata__item">
+              <dt class="repo-metadata__label">Default branch</dt>
+              <dd class="badge-branch"><%= repository_data[:default_branch] %></dd>
+            </div>
+          </dl>
+
+          <div class="repo-actions">
+            <%= button_to(repository_data[:active] ? "Deactivate" : "Activate",
+                          toggle_repositories_path,
+                          method: :patch,
+                          params: {
+                            repository: {
+                              name: repository_data[:name],
+                              owner: repository_data[:owner],
+                              repo_name: repository_data[:repo_name],
+                              default_branch: repository_data[:default_branch],
+                              active: !repository_data[:active]
+                            }
+                          },
+                          class: repository_data[:active] ? "btn-secondary" : "btn-primary") %>
           </div>
         </article>
       <% end %>
     </section>
   <% else %>
-    <section class="card text-center">
-      <div class="mx-auto max-w-lg space-y-4">
-        <h2 class="font-display text-2xl font-semibold tracking-tight text-white">No repositories configured</h2>
+    <section class="empty-state">
+      <div class="empty-state__content">
+        <h2 class="empty-state__title">No repositories available</h2>
         <p class="page-copy mx-auto">
-          Create your first repository source to start tracking pull requests from GitHub.
+          Your current GitHub token does not expose any repositories yet. Update the token permissions or repository selection and try again.
         </p>
-        <%= link_to "Create repository", new_repository_path, class: "btn-primary" %>
+        <%= link_to "Manage GitHub token", edit_github_token_path, class: "btn-primary" %>
       </div>
     </section>
   <% end %>

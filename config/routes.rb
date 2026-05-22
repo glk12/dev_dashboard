@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   root "my_pull_requests#index"
   
-  resources :repositories
+  resources :repositories, only: [ :index ] do
+    patch :toggle, on: :collection
+  end
 
   get "my_pull_requests", to: "my_pull_requests#index"
 

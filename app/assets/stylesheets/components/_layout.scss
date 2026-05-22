@@ -1,0 +1,43 @@
+.app-header {
+  backdrop-filter: blur(8px);
+  background-color: rgba(2, 6, 24, 0.85);
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.app-header__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-block: 1rem;
+
+  @media (min-width: 40rem) {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.app-brand {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.75rem;
+}
+
+.app-brand__title {
+  color: #fff;
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.app-nav,
+.app-header__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

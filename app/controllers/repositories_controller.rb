@@ -1,72 +1,54 @@
 class RepositoriesController < ApplicationController
-  before_action :set_repository, only: %i[ show edit update destroy ]
   before_action :require_authentication
   before_action :require_github_credential
+  before_action :set_github_client, only: %i[ index toggle ]
 
-  # GET /repositories or /repositories.json
   def index
-    @repositories = Repository.all
-  end
+    repositories_by_full_name = Repository.all.index_by(&:full_name)
 
-  # GET /repositories/1 or /repositories/1.json
-  def show
-  end
+    @available_repositories = @github_client.accessible_repositories.map do |github_repository|
+      repository = repositories_by_full_name[github_repository.full_name]
 
-  # GET /repositories/new
-  def new
-    @repository = Repository.new
-  end
-
-  # GET /repositories/1/edit
-  def edit
-  end
-
-  # POST /repositories or /repositories.json
-  def create
-    @repository = Repository.new(repository_params)
-
-    respond_to do |format|
-      if @repository.save
-        format.html { redirect_to @repository, notice: "Repository was successfully created." }
-        format.json { render :show, status: :created, location: @repository }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @repository.errors, status: :unprocessable_entity }
-      end
+      {
+        name: github_repository.name,
+        owner: github_repository.owner.login,
+        repo_name: github_repository.name,
+        full_name: github_repository.full_name,
+        default_branch: github_repository.default_branch,
+        private: github_repository.private,
+        active: repository&.active? || false,
+        persisted: repository.present?,
+        repository: repository
+      }
     end
   end
 
-  # PATCH/PUT /repositories/1 or /repositories/1.json
-  def update
-    respond_to do |format|
-      if @repository.update(repository_params)
-        format.html { redirect_to @repository, notice: "Repository was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @repository }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @repository.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  def toggle
+    repository = Repository.find_or_initialize_by(
+      owner: repository_toggle_params[:owner],
+      repo_name: repository_toggle_params[:repo_name]
+    )
 
-  # DELETE /repositories/1 or /repositories/1.json
-  def destroy
-    @repository.destroy!
+    repository.assign_attributes(
+      name: repository_toggle_params[:name],
+      default_branch: repository_toggle_params[:default_branch],
+      active: ActiveModel::Type::Boolean.new.cast(repository_toggle_params[:active])
+    )
 
-    respond_to do |format|
-      format.html { redirect_to repositories_path, notice: "Repository was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+    if repository.save
+      notice = repository.active? ? "Repository activated successfully." : "Repository deactivated successfully."
+      redirect_to repositories_path, notice: notice
+    else
+      redirect_to repositories_path, alert: repository.errors.full_messages.to_sentence
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_repository
-      @repository = Repository.find(params.expect(:id))
+    def repository_toggle_params
+      params.expect(repository: [ :name, :owner, :repo_name, :default_branch, :active ])
     end
 
-    # Only allow a list of trusted parameters through.
-    def repository_params
-      params.expect(repository: [ :name, :owner, :repo_name, :default_branch, :active ])
+    def set_github_client
+      @github_client = Github::Client.new(access_token: current_user.github_credential.fine_grained_token)
     end
 end

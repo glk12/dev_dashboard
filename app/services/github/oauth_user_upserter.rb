@@ -22,7 +22,7 @@ module Github
     end
 
     private
-
+    
     attr_reader :auth
 
     def github_profile_url

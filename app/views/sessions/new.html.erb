@@ -1,49 +1,49 @@
 <% content_for :title, "Sign in" %>
 
-<section class="flex min-h-[calc(100vh-9rem)] items-center justify-center">
-  <div class="grid w-full max-w-6xl gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-    <div class="hidden rounded-[2rem] border border-slate-800/80 bg-slate-950/40 p-10 shadow-[0_24px_60px_rgba(0,0,0,0.35)] lg:block">
-      <div class="flex h-full flex-col justify-between">
-        <div class="space-y-6">
-          <span class="badge rounded-full border border-brand-400/30 bg-brand-500/10 px-3 py-1.5 text-brand-200">
+<section class="auth-shell">
+  <div class="auth-grid">
+    <div class="auth-hero">
+      <div class="auth-hero__layout">
+        <div class="stack-xl">
+          <span class="badge badge-branch px-3 py-1.5">
             GitHub workflow
           </span>
 
-          <div class="space-y-4">
-            <h1 class="font-display text-5xl font-semibold tracking-tight text-white">
+          <div class="stack-lg">
+            <h1 class="auth-hero__title">
               Track your pull requests in one place.
             </h1>
-            <p class="max-w-xl text-lg leading-8 text-slate-300">
+            <p class="auth-hero__copy">
               Sign in with GitHub, connect your token, and keep your personal review board synced with the repositories that matter.
             </p>
           </div>
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-3">
-          <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
-            <p class="text-sm font-semibold text-white">Personal board</p>
-            <p class="mt-2 text-sm leading-6 text-slate-400">See only the PRs authored by your GitHub account.</p>
+        <div class="auth-feature-grid">
+          <div class="auth-feature-card">
+            <p class="info-panel__title">Personal board</p>
+            <p class="page-copy mt-2 max-w-none">See only the PRs authored by your GitHub account.</p>
           </div>
-          <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
-            <p class="text-sm font-semibold text-white">Fine-grained access</p>
-            <p class="mt-2 text-sm leading-6 text-slate-400">Use your own token with repository-level permissions.</p>
+          <div class="auth-feature-card">
+            <p class="info-panel__title">Fine-grained access</p>
+            <p class="page-copy mt-2 max-w-none">Use your own token with repository-level permissions.</p>
           </div>
-          <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
-            <p class="text-sm font-semibold text-white">Focused review flow</p>
-            <p class="mt-2 text-sm leading-6 text-slate-400">Draft, review, changes requested, and approved in one view.</p>
+          <div class="auth-feature-card">
+            <p class="info-panel__title">Focused review flow</p>
+            <p class="page-copy mt-2 max-w-none">Draft, review, changes requested, and approved in one view.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="card mx-auto w-full max-w-xl p-8 sm:p-10">
+    <div class="auth-card">
       <div class="space-y-8">
-        <div class="space-y-4">
-          <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-200 ring-1 ring-inset ring-brand-400/30">
+        <div class="stack-lg">
+          <div class="auth-brand-mark">
             <span class="font-display text-lg font-bold">DD</span>
           </div>
 
-          <div class="space-y-3">
+          <div class="stack-md">
             <p class="eyebrow">Welcome Back</p>
             <h2 class="page-title">Sign in to Dev Dashboard</h2>
             <p class="page-copy max-w-none">
@@ -52,10 +52,10 @@
           </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
-          <div class="space-y-3">
-            <p class="text-sm font-semibold text-white">What happens next</p>
-            <ul class="space-y-2 text-sm leading-6 text-slate-300">
+        <div class="auth-next-steps">
+          <div class="stack-md">
+            <p class="info-panel__title">What happens next</p>
+            <ul class="info-panel__list">
               <li>1. You sign in with GitHub OAuth.</li>
               <li>2. We create or reuse your local account.</li>
               <li>3. If needed, you connect your fine-grained GitHub token.</li>
@@ -63,14 +63,14 @@
           </div>
         </div>
 
-        <%= button_to "/auth/github", method: :post, data: { turbo: false }, class: "btn-primary flex w-full items-center justify-center gap-3 text-base" do %>
+        <%= button_to "/auth/github", method: :post, data: { turbo: false }, class: "btn-primary auth-submit" do %>
           <svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5 fill-current">
             <path d="M12 .5C5.65.5.5 5.66.5 12.03c0 5.1 3.3 9.43 7.88 10.96.58.1.8-.26.8-.57 0-.28-.02-1.23-.02-2.23-2.89.53-3.64-.71-3.87-1.36-.12-.33-.65-1.36-1.1-1.63-.37-.2-.9-.7-.02-.71.83-.02 1.42.77 1.62 1.09.95 1.6 2.47 1.15 3.08.87.1-.7.37-1.15.67-1.41-2.56-.29-5.23-1.29-5.23-5.71 0-1.26.45-2.3 1.18-3.1-.12-.29-.52-1.47.12-3.06 0 0 .97-.31 3.17 1.18a10.9 10.9 0 0 1 5.77 0c2.2-1.5 3.17-1.18 3.17-1.18.65 1.59.24 2.77.12 3.06.73.8 1.18 1.82 1.18 3.1 0 4.43-2.69 5.42-5.25 5.71.42.37.77 1.06.77 2.15 0 1.55-.02 2.8-.02 3.18 0 .31.22.68.8.57a11.56 11.56 0 0 0 7.86-10.96C23.5 5.66 18.35.5 12 .5Z"/>
           </svg>
           <span>Sign in with GitHub</span>
         <% end %>
 
-        <p class="text-center text-sm text-slate-500">
+        <p class="legal-copy">
           Your GitHub password is never handled by this application.
         </p>
       </div>

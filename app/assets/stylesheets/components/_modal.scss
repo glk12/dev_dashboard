@@ -1,0 +1,56 @@
+.app-modal {
+  backdrop-filter: blur(8px);
+  background-color: rgba(2, 6, 24, 0.7);
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 1.75rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  color: #f1f5f9;
+  max-width: 32rem;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+
+  &::backdrop {
+    backdrop-filter: blur(4px);
+    background-color: rgba(2, 6, 24, 0.8);
+  }
+}
+
+.app-modal__header {
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  padding: 1.25rem 1.5rem;
+
+  @media (min-width: 40rem) {
+    padding-inline: 2rem;
+  }
+}
+
+.app-modal__title {
+  color: #fff;
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin-top: 0.5rem;
+}
+
+.app-modal__copy {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.app-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+
+  @media (min-width: 40rem) {
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding-inline: 2rem;
+  }
+}

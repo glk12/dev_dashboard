@@ -6,17 +6,24 @@ cleanup() {
     kill "$web_pid" 2>/dev/null || true
   fi
 
-  if [[ -n "${css_pid:-}" ]]; then
-    kill "$css_pid" 2>/dev/null || true
+  if [[ -n "${tailwind_pid:-}" ]]; then
+    kill "$tailwind_pid" 2>/dev/null || true
+  fi
+
+  if [[ -n "${sass_pid:-}" ]]; then
+    kill "$sass_pid" 2>/dev/null || true
   fi
 }
 
 trap cleanup EXIT INT TERM
 
 bin/rails tailwindcss:watch[always] &
-css_pid=$!
+tailwind_pid=$!
+
+bin/rails dartsass:watch &
+sass_pid=$!
 
 bin/rails server "$@" &
 web_pid=$!
 
-wait -n "$css_pid" "$web_pid"
+wait -n "$tailwind_pid" "$sass_pid" "$web_pid"

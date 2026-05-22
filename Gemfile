@@ -69,3 +69,5 @@ group :test do
 end
 
 gem "octokit", "~> 10.0"
+
+gem "dartsass-rails", "~> 0.5.1"
