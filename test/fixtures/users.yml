@@ -1,21 +1,21 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  github_uid: MyString
-  github_login: MyString
-  github_name: MyString
-  github_email: MyString
-  github_avatar_url: MyString
-  github_profile_url: MyString
-  oauth_provider: MyString
+  github_uid: github-uid-one
+  github_login: octocat-one
+  github_name: Octocat One
+  github_email: octocat-one@example.com
+  github_avatar_url: https://example.com/avatar-one.png
+  github_profile_url: https://github.com/octocat-one
+  oauth_provider: github
   last_signed_in_at: 2026-05-21 05:25:05
 
 two:
-  github_uid: MyString
-  github_login: MyString
-  github_name: MyString
-  github_email: MyString
-  github_avatar_url: MyString
-  github_profile_url: MyString
-  oauth_provider: MyString
+  github_uid: github-uid-two
+  github_login: octocat-two
+  github_name: Octocat Two
+  github_email: octocat-two@example.com
+  github_avatar_url: https://example.com/avatar-two.png
+  github_profile_url: https://github.com/octocat-two
+  oauth_provider: github
   last_signed_in_at: 2026-05-21 05:25:05

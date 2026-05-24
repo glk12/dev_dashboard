@@ -1,24 +1,37 @@
-# README
+# Dev Dashboard
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Rails app for tracking your GitHub pull requests with a personal fine-grained token.
 
-Things you may want to cover:
+## OAuth setup
 
-* Ruby version
+The GitHub OAuth application callback URL must match the app host exactly.
 
-* System dependencies
+- Default local base URL: `http://localhost:3000`
+- OAuth callback URL: `http://localhost:3000/auth/github/callback`
 
-* Configuration
+If you want to run the app on a different origin, set `APP_BASE_URL` before starting Rails and use the matching callback URL in GitHub.
 
-* Database creation
+Example:
 
-* Database initialization
+```bash
+APP_BASE_URL=http://127.0.0.1:3000 bin/dev
+```
 
-* How to run the test suite
+Then configure GitHub with:
 
-* Services (job queues, cache servers, search engines, etc.)
+```text
+http://127.0.0.1:3000/auth/github/callback
+```
 
-* Deployment instructions
+The app now redirects GET/HEAD requests onto the configured base URL so the login flow stays on one canonical host.
 
-* ...
+## Configuration
+
+GitHub OAuth credentials are read from Rails credentials:
+
+- `github.oauth_client_id`
+- `github.oauth_client_secret`
+
+## Test status
+
+I added tests for canonical host redirects and OmniAuth host configuration, but did not run them here because `bundle` is not available in this shell.

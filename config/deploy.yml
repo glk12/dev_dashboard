@@ -2,12 +2,12 @@
 service: dev_dashboard
 
 # Name of the container image (use your-user/app-name on external registries).
-image: dev_dashboard
+image: glk6/dev_dashboard
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 143.95.213.30 
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -20,27 +20,40 @@ servers:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
-# proxy:
-#   ssl: true
-#   host: app.example.com
+proxy:
+  ssl: true
+  host: dev-dashboard.com
+  app_port: 3000
+  healthcheck:
+    path: /up
 
 # Where you keep your container images.
 registry:
   # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: localhost:5555
+  server: docker.io
 
   # Needed for authenticated registries.
-  # username: your-user
+  username: glk6
 
   # Always use an access token rather than real password when possible.
-  # password:
-  #   - KAMAL_REGISTRY_PASSWORD
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
   secret:
     - RAILS_MASTER_KEY
+    - DATABASE_URL
+    - CACHE_DATABASE_URL
+    - QUEUE_DATABASE_URL
+    - CABLE_DATABASE_URL
+    - ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY
+    - ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY
+    - ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
+    - GITHUB_OAUTH_CLIENT_ID
+    - GITHUB_OAUTH_CLIENT_SECRET
   clear:
+    APP_BASE_URL: https://dev-dashboard.com
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
     SOLID_QUEUE_IN_PUMA: true
@@ -91,29 +104,23 @@ builder:
   #   - RAILS_MASTER_KEY
 
 # Use a different ssh user than root
-# ssh:
-#   user: app
+ssh:
+  user: root
+  port: 22022
 
 # Use accessory services (secrets come from .kamal/secrets).
-# accessories:
-#   db:
-#     image: mysql:8.0
-#     host: 192.168.0.2
-#     # Change to 3306 to expose port to the world instead of just local network.
-#     port: "127.0.0.1:3306:3306"
-#     env:
-#       clear:
-#         MYSQL_ROOT_HOST: '%'
-#       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
-#     directories:
-#       - data:/var/lib/mysql
-#   redis:
-#     image: valkey/valkey:8
-#     host: 192.168.0.2
-#     port: 6379
-#     directories:
-#       - data:/data
+accessories:
+  postgres:
+    image: postgres:16
+    host: 143.95.213.30
+    port: "127.0.0.1:5432:5432"
+    env:
+      clear:
+        POSTGRES_DB: dev_dashboard_production
+        POSTGRES_USER: dev_dashboard
+      secret:
+        - POSTGRES_PASSWORD
+    files:
+      - db/production_setup.sql:/docker-entrypoint-initdb.d/01-production-setup.sql
+    directories:
+      - data:/var/lib/postgresql/data

@@ -25,13 +25,13 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  # config.assume_ssl = true
+  config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
@@ -57,8 +57,20 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.x.app_base_url = ENV["APP_BASE_URL"]
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  if config.x.app_base_url.present?
+    app_uri = URI.parse(config.x.app_base_url)
+    config.hosts << app_uri.host if app_uri.host.present?
+    config.action_mailer.default_url_options = {
+      protocol: app_uri.scheme,
+      host: app_uri.host,
+      port: app_uri.port
+    }
+  else
+    config.action_mailer.default_url_options = { host: "example.com" }
+  end
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {

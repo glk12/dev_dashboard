@@ -1,0 +1,3 @@
+CREATE DATABASE dev_dashboard_production_cache;
+CREATE DATABASE dev_dashboard_production_queue;
+CREATE DATABASE dev_dashboard_production_cable;
