@@ -36,3 +36,4 @@
 /docs/*
 /app/assets/builds/*
 !/app/assets/builds/.keep
+DEPLOYMENT.md
